@@ -3,14 +3,17 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define INVALID_KEY -1
+
+
 #define MAX_STACK_SIZE 100
-#define EXIT_ROW 50
-#define EXIT_COL 50 
+#define EXIT_ROW 11
+#define EXIT_COL 15 
 
 #define ROW 11
 #define COL 15
-#define MAX_ROW (ROW+2)
-#define MAX_COL (COL+2)
+#define MAX_ROW (ROW+2) //13
+#define MAX_COL (COL+2) //17
 
 typedef struct {
     short int vert;
@@ -24,9 +27,23 @@ typedef struct {
     short int dir;
 }element;
 
+/* insert an element to the global stack */ 
+void push(element);
+
+/* delete and return an element from the stack */ 
+element pop();
+
+/* outputs error to stderr and exit(1) */ 
+void stackFull();
+
+/* returns an element with INVALID_KEY values for error detection */ 
+element stackEmpty();
+
+/* Global Stack */
 element stack[MAX_STACK_SIZE];
 int top = -1;
 
+/* Global maze and mark */
 bool mark[MAX_ROW][MAX_COL];
 int maze[MAX_ROW][MAX_COL] = 
 {
@@ -45,6 +62,7 @@ int maze[MAX_ROW][MAX_COL] =
     /* 12 */ {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
+/* initialize move[] and mark. */
 void init (){
     for (int i = 0; i < MAX_ROW; i++)
     {
@@ -53,15 +71,23 @@ void init (){
             mark[i][j] = false;   
         }
     }
-    
+    move[0].horiz = 0; move[0].vert = -1;
+    move[1].horiz = 1; move[1].vert = -1;
+    move[2].horiz = 1; move[2].vert = 0;
+    move[3].horiz = 1; move[3].vert = 1;
+    move[4].horiz = 0; move[4].vert = 1;
+    move[5].horiz = -1; move[5].vert = 1;
+    move[6].horiz = -1; move[6].vert = 0;
+    move[7].horiz = -1; move[7].vert = -1;
 }
 
 element stackEmpty(){
     element e;
-    e.row = e.col = e.dir = -1;
+    e.row = e.col = e.dir = INVALID_KEY;
     return e;
 }
-element stackFull(){
+
+void stackFull(){
     fprintf(stderr, "no more space in the stack\n");
     exit(1);
 }
@@ -72,7 +98,8 @@ element pop() {
         return stackEmpty(); /* error handler */
     return stack[top--];
 }
-element push(element item){
+
+void push(element item){
     /* add an item to the global stack */
     if(top >= MAX_STACK_SIZE - 1)
         stackFull(); /* error handler */
@@ -127,5 +154,6 @@ void path(void) {
 
 int main(void)
 {
-    
+    init();
+    path();
 }
