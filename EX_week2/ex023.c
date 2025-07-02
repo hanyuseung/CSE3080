@@ -9,6 +9,7 @@ precedence stack[MAX_STACK_SIZE];
 char expr[MAX_EXPR_SIZE];
 int top = -1;
 
+// isp 와 icp lparen의 우선 순위가 반대임에 유의
 static int isp[] = {0, 19, 12, 12, 13, 13, 13, 0};
 static int icp[] = {20, 19, 12, 12, 13, 13, 13, 0};
 
