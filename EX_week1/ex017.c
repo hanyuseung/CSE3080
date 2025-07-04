@@ -18,8 +18,8 @@ char pat[MAX_PATTERN_SIZE];
 void main() {
 
   int rv, i;
-  strcpy(string, "ababcabcabababdabaabaabacabaababaaabaabaacaaba");
-  strcpy(pat, "abaababaaaba");
+  strcpy(string, "aaaaaaaaaaaaaaaaaaaa");
+  strcpy(pat, "aaab");
   fail(pat);
   for(i=0; i<strlen(pat); i++) {
     printf("%d ", failure[i]);
@@ -46,13 +46,16 @@ int pmatch(char *string, char *pat) {
 
   /* Knuth-Morris-Pratt string matching algorithm */
   int i=0, j=0;
+  int count = 0;
   int lens = strlen(string);
   int lenp = strlen(pat);
   while(i < lens && j < lenp) {
+    count++;
     if(string[i] == pat[j]) { i++; j++; }
     else if(j == 0) i++;
     else j = failure[j-1] + 1;
   }
+  printf("c: %d\n",count);
   return ((j==lenp) ? (i-lenp) : -1);
 }
 
