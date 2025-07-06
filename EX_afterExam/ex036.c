@@ -152,28 +152,28 @@ void iter_preorder(tree_pointer ptr) {
   if(!ptr)return;
   while(top>=0){
     ptr = delete(&top);
-    printf("%c ", ptr->data);
+    printf("%c ", ptr->data); // check value first.
     if(ptr->right_child) add(&top, ptr->right_child);
-    if(ptr->left_child) add(&top, ptr->left_child);
+    if(ptr->left_child) add(&top, ptr->left_child); // stack is FIFO, so add left in last. 
   }
 }
 // lrv - postfix
 void iter_postorder(tree_pointer ptr) {
   /* TODO: you must complete this function */
   int top = -1;
-  tree_pointer curr = ptr;
-  tree_pointer last = NULL;
+  tree_pointer curr = ptr; // current node.
+  tree_pointer last = NULL; // check visited
   while(top>=0 || curr != NULL){
     if(curr){
-      add(&top, curr);
+      add(&top, curr); // l,r
       curr= curr->left_child;
     }
     else{
       if(stack[top]->right_child && (last != stack[top]->right_child)){
-        curr = stack[top]->right_child;
+        curr = stack[top]->right_child; // shift to right if it dont check right_child yet.
       }
       else{
-        last = delete(&top);
+        last = delete(&top); // l,r done, so pop value in stack.
         printf("%c ", last->data);
       }
     }
