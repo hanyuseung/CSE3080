@@ -146,22 +146,38 @@ void iter_inorder(tree_pointer ptr) {
 
 // vlr - prefix
 void iter_preorder(tree_pointer ptr) {
-  int top = -1;
-  for(; ptr; ptr = ptr->left_child){
-    printf("%c ",ptr->data);
-    add(&top, ptr);
-  }
-  delete(&top); //delete remain left child.
-  while(1){
-    tree_pointer tmp = delete(&top);
-    if(!tmp) break;
-    printf("%c ", tmp->right_child->data);
-  }
   /* TODO: you must complete this function */
+  int top = -1;
+  add(&top, ptr);
+  if(!ptr)return;
+  while(top>=0){
+    ptr = delete(&top);
+    printf("%c ", ptr->data);
+    if(ptr->right_child) add(&top, ptr->right_child);
+    if(ptr->left_child) add(&top, ptr->left_child);
+  }
 }
 // lrv - postfix
 void iter_postorder(tree_pointer ptr) {
   /* TODO: you must complete this function */
+  int top = -1;
+  tree_pointer curr = ptr;
+  tree_pointer last = NULL;
+  while(top>=0 || curr != NULL){
+    if(curr){
+      add(&top, curr);
+      curr= curr->left_child;
+    }
+    else{
+      if(stack[top]->right_child && (last != stack[top]->right_child)){
+        curr = stack[top]->right_child;
+      }
+      else{
+        last = delete(&top);
+        printf("%c ", last->data);
+      }
+    }
+  }
 }
 
 // Code from Lecture note p33.
