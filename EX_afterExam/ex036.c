@@ -26,10 +26,19 @@ void iter_preorder(tree_pointer ptr);
 void level_order(tree_pointer ptr);
 
 /* TODO: add function prototype if necessary */
+
+/* if stack full, output error and exit */
 void add(int *top, tree_pointer ptr);
+
+/* if stack empty, return NULL */
 tree_pointer delete(int *top);
+
+/* if queue full, output error and exit */
 void addq(int *rear, tree_pointer ptr, int *size);
+
+/* if queue empty, return NULL */
 tree_pointer deleteq(int *front, int *size);
+
 
 /* TODO: stack, queue function */
 void add(int *top, tree_pointer ptr){
@@ -72,6 +81,29 @@ tree_pointer deleteq(int *front, int *size){
 }
 
 
+// Test code for balanced polynomial tree
+void test(){
+  tree_pointer a,b,c,d,mul,sub,plus,root;
+  a = create_tree_node('A');
+  b = create_tree_node('B');
+  c = create_tree_node('C');
+  d = create_tree_node('D');
+  mul = create_tree_node('*');
+  sub = create_tree_node('-');
+  root = create_tree_node('+');
+
+  mul->left_child = a; mul->right_child = b;
+  sub->left_child = c; sub->right_child = d;
+
+  root->left_child = mul; root->right_child = sub;
+  printf("Balanced polynomial tree\n");
+  recursive_inorder(root); printf("\n");
+  iter_inorder(root); printf("\n");
+  iter_preorder(root); printf("\n");
+  iter_postorder(root); printf("\n");
+  level_order(root); printf("\n");
+}
+
 
 void main() {
   // Same tree in Lec 27p
@@ -113,6 +145,8 @@ void main() {
   printf("\n");
   level_order(ptr);
   printf("\n");
+
+  //test();
 }
   
 tree_pointer create_tree_node(char data) {
@@ -148,21 +182,23 @@ void iter_inorder(tree_pointer ptr) {
 void iter_preorder(tree_pointer ptr) {
   /* TODO: you must complete this function */
   int top = -1;
+  if(!ptr) return;
   add(&top, ptr);
-  if(!ptr)return;
   while(top>=0){
     ptr = delete(&top);
     printf("%c ", ptr->data); // check value first.
     if(ptr->right_child) add(&top, ptr->right_child);
-    if(ptr->left_child) add(&top, ptr->left_child); // stack is FIFO, so add left in last. 
+    if(ptr->left_child) add(&top, ptr->left_child); // stack is LIFO, so add left in last. 
   }
 }
+
 // lrv - postfix
 void iter_postorder(tree_pointer ptr) {
   /* TODO: you must complete this function */
   int top = -1;
   tree_pointer curr = ptr; // current node.
   tree_pointer last = NULL; // check visited
+  if(!ptr) return;
   while(top>=0 || curr != NULL){
     if(curr){
       add(&top, curr); // l,r
