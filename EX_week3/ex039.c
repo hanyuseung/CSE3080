@@ -47,7 +47,7 @@ void insertNode(treePointer *node, int k) {
             else temp->rightChild = ptr;
         }
         else *node = ptr;
-        //printf("node with key %d inserted.\n", k);
+        printf("node with key %d inserted.\n", k);
     }
     else {
         printf("key %d is already in the tree.\n", k);
@@ -56,7 +56,11 @@ void insertNode(treePointer *node, int k) {
 
 void deleteNode(treePointer *node, int k) {
     /* complete this function! */
-    
+    if(!(*node)){
+        printf("key %d is not in tree.\n",k);
+        return;
+    }
+
     if((*node) && (*node)->data.key > k){
         deleteNode(&((*node)->leftChild), k);
     } else if((*node) && (*node)->data.key < k){
@@ -64,71 +68,66 @@ void deleteNode(treePointer *node, int k) {
     }
     else{
         treePointer target = (*node);
-        treePointer temp = target;
-        if(!(*node)){
-            printf("key %d is not in tree.\n",k);
-            return;
-        }
-        else{
-            if(!(target->leftChild) && !(target->rightChild)){ // 자식이 없다
-                (*node) = NULL;
-            } else if(target->leftChild && !(target->rightChild)){ //left만 있다.
-                (*node) = target->leftChild;
-            } else if(target->rightChild && !(target->leftChild)){ // right 만 있다
-                (*node) = target->rightChild;
-            } else{ 
-                treePointer *succ = &target->leftChild;
-                // 둘다 있으니 leftChild의 subtree의 최대값으로 대체해야한다.
-                while((*succ)->rightChild){
-                    succ = &(*succ)->rightChild;
-                }
-                temp = *succ;
-                (*node)->data = (*succ)->data;
-                (*succ) = (*succ)->leftChild;
+        treePointer temp = target; 
+        if(!(target->leftChild) && !(target->rightChild)){ // 자식이 없다
+            (*node) = NULL;
+        } else if(target->leftChild && !(target->rightChild)){ //left만 있다.
+            (*node) = target->leftChild;
+        } else if(target->rightChild && !(target->leftChild)){ // right 만 있다
+            (*node) = target->rightChild;
+        } else{ 
+            treePointer *succ = &target->leftChild;
+            // 둘다 있으니 leftChild의 subtree의 최대값으로 대체해야한다.
+            while((*succ)->rightChild){
+                succ = &(*succ)->rightChild;
             }
-            free(temp);
+            temp = *succ;
+            (*node)->data = (*succ)->data;
+            (*succ) = (*succ)->leftChild;
         }
+        free(temp);
+    
     }
 }
 
 void main() {
 
     treePointer tree = NULL;
-    // insertNode(&tree, 30);
-    // insertNode(&tree, 40);
-    // insertNode(&tree, 20);
-    // insertNode(&tree, 50);
-    // insertNode(&tree, 10);
-    // inorder(tree); printf("\n");
+    insertNode(&tree, 30);
+    insertNode(&tree, 40);
+    insertNode(&tree, 20);
+    insertNode(&tree, 50);
+    insertNode(&tree, 10);
+    printf("Tree Before delete\n");
+    inorder(tree); printf("\n");
+
+    // case 1 : invalid value
+    printf("Case 1: If the node does not exist.\n");
+    deleteNode(&tree, -1);
+    inorder(tree); printf("\n\n");
+
 
     treePointer tree2 = NULL;
     insertNode(&tree2, 30);
     insertNode(&tree2, 80);
     insertNode(&tree2,  5);
     insertNode(&tree2,  2);
+    
     printf("Tree Before delete\n");
     inorder(tree2); printf("\n");
 
-    // case 1 : invalid value
-    printf("Case 1: If the node does not exist.\n");
-    deleteNode(&tree2, -1);
-    inorder(tree2); printf("\n\n");
-
-
-    printf("Tree Before delete\n");
-    inorder(tree2); printf("\n");
     //case 2 : delete 80
     printf("Case 2: If the node is a leaf node\n");
     deleteNode(&tree2, 80);
     inorder(tree2); printf("\n\n");
 
 
+
     insertNode(&tree2, 80);
     printf("Tree Before delete\n");
     inorder(tree2); printf("\n");
-    
+
     // case3 : delete 5
-    
     printf("Case 3: If the deleted node is a nonleaf node with a single child.\n");
     deleteNode(&tree2, 5);
     inorder(tree2); printf("\n\n");
@@ -153,6 +152,4 @@ void main() {
     printf("Case 4: If the deleted node is a nonleaf node with two children.\n");
     deleteNode(&tree3, 60);
     inorder(tree3); printf("\n");
-
-
 }

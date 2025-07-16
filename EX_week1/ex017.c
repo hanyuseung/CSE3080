@@ -19,7 +19,7 @@ void main() {
 
   int rv, i;
   strcpy(string, "aaaaaaaaaaaaaaaaaaaa");
-  strcpy(pat, "aaab");
+  strcpy(pat, "aaaaaaaaab");
   fail(pat);
   for(i=0; i<strlen(pat); i++) {
     printf("%d ", failure[i]);
